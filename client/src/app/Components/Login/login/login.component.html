@@ -1,0 +1,143 @@
+<div class="d-flex justify-content-center align-items-center vh-100" style="background-image: url('assets/Fondo.jpeg'); background-size: cover; background-position: center;">
+  <div class="container" style="max-width: 400px; background-color: rgba(51, 51, 51, 0.9); padding: 20px; border-radius: 8px; color: #f5f5f5;">
+
+    <!-- TÍTULO DINÁMICO -->
+    <h2 class="text-center">
+      {{
+        estado === 'recuperar' ? 'Recuperar Contraseña' :
+        estado === 'codigo' ? 'Verificar Código' :
+        estado === 'nueva' ? 'Nueva Contraseña' :
+        'Inicio de Sesión'
+      }}
+    </h2>
+
+    <!-- FORMULARIO INICIO DE SESIÓN -->
+    <form *ngIf="estado === 'login'" (ngSubmit)="login()">
+      <!-- Correo -->
+      <div class="form-group">
+        <label for="correo">Correo</label>
+        <input
+          type="email"
+          id="correo"
+          [(ngModel)]="correo"
+          name="correo"
+          class="form-control"
+          required
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+          #correoInput="ngModel"
+          placeholder="Ingrese su correo electrónico"
+        />
+        <div *ngIf="correoInput.invalid && correoInput.touched" class="text-danger">
+          Ingrese un correo electrónico válido.
+        </div>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-group mt-3">
+        <label for="contrasena">Contraseña</label>
+        <input type="password" [(ngModel)]="contrasena" name="contrasena" class="form-control" required />
+      </div>
+
+      <!-- Enlace para recuperar contraseña -->
+      <div class="mt-2 text-end">
+        <span (click)="estado = 'recuperar'" class="text-light text-decoration-underline" style="cursor: pointer;">
+          ¿Olvidaste tu contraseña?
+        </span>
+      </div>
+
+      <!-- CAPTCHA -->
+      <div class="mt-3">
+        <re-captcha
+          [(ngModel)]="captcha"
+          name="captcha"
+          siteKey="6Lf-ymYrAAAAAPDFJIJwi-4W2KP9Zr3psRJavy1H"
+          (resolved)="resolvedCaptcha($event)">
+        </re-captcha>
+      </div>
+
+      <!-- Botón iniciar sesión -->
+      <button
+        type="submit"
+        class="btn btn-primary w-100 mt-4"
+        [disabled]="correoInput.invalid || !captcha">
+        Iniciar Sesión
+      </button>
+    </form>
+
+   
+
+    <!-- FORMULARIO RECUPERACIÓN: Ingresar Correo -->
+    <form *ngIf="estado === 'recuperar'" (ngSubmit)="enviarRecuperacion()">
+      <div class="form-group">
+        <label for="correoRecuperacion">Correo Electrónico</label>
+        <input
+          type="email"
+          id="correoRecuperacion"
+          [(ngModel)]="correo"
+          name="correoRecuperacion"
+          class="form-control"
+          required
+          placeholder="Escribe tu correo para recuperar"
+        />
+      </div>
+
+      <div class="mt-3 d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary">Enviar Código</button>
+        <button type="button" class="btn btn-secondary" (click)="estado = 'login'">Cancelar</button>
+      </div>
+    </form>
+
+    <!-- FORMULARIO CÓDIGO DE VERIFICACIÓN -->
+    <form *ngIf="estado === 'codigo'" (ngSubmit)="verificarCodigo()">
+      <div class="form-group">
+        <label for="codigo">Código de Verificación</label>
+        <input
+          type="text"
+          id="codigo"
+          [(ngModel)]="codigo"
+          name="codigo"
+          class="form-control"
+          required
+          maxlength="4"
+          placeholder="Ingresa el código recibido"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary w-100 mt-3">Verificar</button>
+    </form>
+
+    <!-- FORMULARIO NUEVA CONTRASEÑA -->
+    <form *ngIf="estado === 'nueva'" (ngSubmit)="cambiarContrasena()">
+      <div class="form-group">
+        <label for="contrasenaNueva">Nueva Contraseña</label>
+        <input
+          type="password"
+          id="contrasenaNueva"
+          [(ngModel)]="contrasenaNueva"
+          name="contrasenaNueva"
+          class="form-control"
+          required
+        />
+      </div>
+
+      <div class="form-group mt-2">
+        <label for="confirmarContrasena">Confirmar Contraseña</label>
+        <input
+          type="password"
+          id="confirmarContrasena"
+          [(ngModel)]="confirmarContrasena"
+          name="confirmarContrasena"
+          class="form-control"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-3">Cambiar Contraseña</button>
+    </form>
+
+    <!-- MENSAJE GLOBAL -->
+    <div *ngIf="mensaje" class="alert alert-info mt-3 text-center">
+      {{ mensaje }}
+    </div>
+
+  </div>
+</div>

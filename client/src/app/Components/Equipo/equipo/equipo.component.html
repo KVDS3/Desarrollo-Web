@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="es">
+
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title class="h1">Formaciones de Jugadores</title >
+  <link rel="stylesheet" href="./equipo.component.css">
+</head>
+
+
+
+<body>
+
+  <div class="club-logo-container">
+    <img *ngIf="clubLogoUrl" [src]="clubLogoUrl" alt="Logotipo del Club" class="club-logo falling-logo" />
+  </div>
+  
+  <h1 class="falling-title2">Formaciones de Jugadores</h1>
+  
+  <div class="container" style="width: fit-content; max-width: 100%; background-color: black;opacity: 0.8; padding: 20px; border-radius: 8px; color: #f5f5f5;">
+    <!-- Aquí va la sección de Formaciones de Jugadores -->
+  
+    <div *ngIf="equipo.id_equipo" class="equipo-info">
+
+      <p><strong>Categoría:</strong> {{ equipo.categoria }}</p>
+      <p><strong>Colores:</strong> {{ equipo.colores }}</p>
+      <p><strong>Juegos Ganados:</strong> {{ equipo.juegos_ganados }}</p>
+      <p><strong>Juegos Perdidos:</strong> {{ equipo.juegos_perdidos }}</p>
+      <p><strong>Cantidad de Amonestaciones:</strong> {{ equipo.cantidad_amonestaciones }}</p>
+      <p><strong>Estado:</strong> {{ equipo.estado }}</p>
+      <p><strong>Director Técnico:</strong> {{ equipo.nombre_dt }}</p>
+    </div>
+  </div>
+  
+  
+  <!-- Si el equipo no se ha encontrado, mostrar un mensaje -->
+  <div *ngIf="!equipo.id_equipo">
+    <p>Equipo no encontrado.</p>
+  </div>
+
+  <div class="container" style="width: fit-content; max-width: 100%; background-image: url('/assets/FondoF.jpeg'); padding: 20px; border-radius: 8px; color: #f5f5f5;" class="falling-title">
+
+  <div *ngFor="let deporte of deportes" [id]="deporte.nombre" class="formation-container">
+    <div class="field">
+      <div *ngFor="let posicion of deporte.posiciones" class="card" (click)="abrirFormulario(posicion)">
+        <div class="image-container">
+          <img 
+            *ngIf="fotosJugadores[posicion]" 
+            [src]="fotosJugadores[posicion]" 
+            alt="Foto del jugador" 
+            class="player-photo" 
+          />
+          <img 
+          [src]="clubLogoUrl" 
+          alt="Logotipo del Club" 
+          class="club-logo-overlay" 
+        />
+          <img 
+            *ngIf="!fotosJugadores[posicion] && clubLogoUrl" 
+            [src]="clubLogoUrl" 
+            alt="Logotipo del Club" 
+            class="club-logo-overlay" 
+          />
+        </div>
+        <div class="position-label">{{ posicion }}</div>
+      </div>
+    </div>
+    <div>
+      <!-- Mostrar botón solo si mostrarBoton es true -->
+      <button *ngIf="mostrarBoton" (click)="VerificarEquipoC()">Verificar Equipo</button>
+    </div>
+    
+    
+  </div>
+</div>
+
+ <!-- Formulario emergente -->
+<div *ngIf="formularioVisible" class="form-popup">
+  <h3>Registrar Jugador en {{ posicionSeleccionada }}</h3>
+  <form (ngSubmit)="guardarJugador()" enctype="multipart/form-data" class="formulario">
+    <div class="form-grid">
+      <div class="columna">
+        <!-- Nombre Completo -->
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" [(ngModel)]="jugador.nombre_completo" name="nombre_completo" required />
+
+        <label for="apodo">Apodo:</label>
+        <input type="text" id="apodo" [(ngModel)]="jugador.apodo" name="apodo" />
+
+        <label for="nombre">Correo:</label>
+        <input type="text" id="correo" [(ngModel)]="jugador.correo" name="correo" required />
+
+        <!-- Fecha de Nacimiento -->
+        <label for="edad">Fecha de Nacimiento:</label>
+        <input type="date" id="edad" [(ngModel)]="jugador.fecha_nacimiento" name="fecha_nacimiento" required />
+      </div>
+
+      <div class="columna">
+        <!-- Sexo -->
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" [(ngModel)]="jugador.sexo" name="sexo" required>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+        </select>
+
+        <!-- Ciudad de Nacimiento (con catálogo de ciudades de México) -->
+        <label for="ciudad">Ciudad de Nacimiento:</label>
+        <select id="ciudad" [(ngModel)]="jugador.ciudad_nacimiento" name="ciudad_nacimiento" required>
+          <option *ngFor="let ciudad of ciudades" [value]="ciudad">{{ ciudad }}</option>
+        </select>
+
+        <!-- Peso -->
+        <label for="peso">Peso (kg):</label>
+        <input type="number" id="peso" [(ngModel)]="jugador.peso" name="peso" min="0" />
+
+        <!-- Estatura -->
+        <label for="estatura">Estatura:</label>
+        <input type="number" id="estatura" [(ngModel)]="jugador.estatura" name="estatura" min="0" />
+      </div>
+
+      <div class="columna">
+        <!-- Años de Experiencia -->
+        <label for="anios_experiencia">Años de Experiencia:</label>
+        <input type="number" id="anios_experiencia" [(ngModel)]="jugador.anios_experiencia" name="anios_experiencia" min="0" />
+
+        <!-- Pasatiempos -->
+        <label for="pasatiempos">Pasatiempos:</label>
+        <select id="pasatiempos" [(ngModel)]="jugador.pasatiempos" name="pasatiempos">
+          <option *ngFor="let pasatiempo of pasatiempos" [value]="pasatiempo">{{ pasatiempo }}</option>
+        </select>
+
+        <!-- Música Favorita -->
+        <label for="musica_favorita">Música Favorita:</label>
+        <select id="musica_favorita" [(ngModel)]="jugador.musica_favorita" name="musica_favorita">
+          <option *ngFor="let genero of generosMusicales" [value]="genero">{{ genero }}</option>
+        </select>
+
+        <label for="facebook">Facebook:</label>
+        <input type="text" id="facebook" [(ngModel)]="jugador.redes_sociales.facebook" name="facebook" />
+
+        <label for="instagram">Instagram:</label>
+        <input type="text" id="instagram" [(ngModel)]="jugador.redes_sociales.instagram" name="instagram" />
+
+        <!-- Foto del Jugador -->
+        <label for="foto">Foto del Jugador:</label>
+        <input type="file" id="foto" (change)="cargarFoto($event)" />
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="botones">
+      <button type="submit">Guardar</button>
+      <button type="button" (click)="cerrarFormulario()">Cancelar</button>
+    </div>
+  </form>
+</div>
+
+<!-- Formulario emergente -->
+<div *ngIf="formularioRecuperado" class="form-popup" >
+  <h3>Ver Jugador {{ posicionSeleccionada }}</h3>
+
+  <div class="form-grid">
+
+    <div class="form-group">
+      <label for="foto" >Foto</label >
+      <img id="foto" [src]="jugadorRecuperado.foto" alt="Foto del jugador" class= 'club-logo'>
+    </div>
+
+    <div class="form-group">
+      <label for="nombre_completo">Nombre Completo</label>
+      <input type="text" id="nombre_completo" name="nombre_completo" [value]="jugadorRecuperado.nombre_completo" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="sexo">Sexo</label>
+      <select id="sexo" name="sexo" [value]="jugadorRecuperado.sexo" disabled>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+      <input 
+        type="date" 
+        id="fecha_nacimiento" 
+        name="fecha_nacimiento" 
+        [value]="formatDate(jugadorRecuperado.fecha_nacimiento)" 
+        readonly>
+    </div>
+
+
+
+    <div class="form-group">
+      <label for="apodo">Apodo</label>
+      <input type="text" id="apodo" name="apodo" [value]="jugadorRecuperado.apodo" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="posicion">Posición</label>
+      <input type="text" id="posicion" name="posicion" [value]="jugadorRecuperado.posicion" readonly>
+    </div>
+
+    
+
+    <div class="form-group">
+      <label for="ciudad_nacimiento">Ciudad de Nacimiento</label>
+      <input type="text" id="ciudad_nacimiento" name="ciudad_nacimiento" [value]="jugadorRecuperado.ciudad_nacimiento" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="anios_experiencia">Años de Experiencia</label>
+      <input type="number" id="anios_experiencia" name="anios_experiencia" [value]="jugadorRecuperado.anios_experiencia" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="amonestaciones">Amonestaciones</label>
+      <input type="number" id="amonestaciones" name="amonestaciones" [value]="jugadorRecuperado.amonestaciones" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="puntos_acumulados">Puntos Acumulados</label>
+      <input type="number" id="puntos_acumulados" name="puntos_acumulados" [value]="jugadorRecuperado.puntos_acumulados" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="correo">Correo</label>
+      <input type="email" id="correo" name="correo" [value]="jugadorRecuperado.correo" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="pasatiempos">Pasatiempos</label>
+      <input id="pasatiempos" name="pasatiempos" rows="3" [value]="jugadorRecuperado.pasatiempos" >
+    </div>
+
+    <div class="form-group">
+      <label for="musica_favorita">Música Favorita</label>
+      <input id="musica_favorita" name="musica_favorita" rows="3" [value]="jugadorRecuperado.musica_favorita" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="redes_sociales">Redes Sociales</label>
+      <div id="redes_sociales" class="redes-sociales">
+        <a *ngIf="facebookLink" [href]="facebookLink" target="_blank">Facebook</a>
+        <a *ngIf="instagramLink" [href]="instagramLink" target="_blank">Instagram</a>
+      </div>
+  </div>
+</div>
+
+
+  <div class="form-buttons">
+    <button type="submit">Guardar</button>
+    <button type="button" (click)="cerrarFormulario2()">Cerrar</button>
+  </div>
+</div>
+
+
+</body>
+
+
+</html>
+

@@ -1,0 +1,268 @@
+<div class="d-flex justify-content-center align-items-center vh-100" style="background-image: url('assets/fondoAdmin.png'); background-size: cover; background-position: center;">
+  <div
+  class="container"
+  [ngStyle]="{
+    'max-width': formStep === 3 ? '1000px' : '400px',
+    'background-color': 'rgba(51, 51, 51, 0.9)',
+    'padding': '20px',
+    'border-radius': '8px',
+    'color': '#f5f5f5',
+    'transition': 'max-width 0.3s ease'
+  }"
+>
+
+
+
+<div class="club-logo-container">
+  <img *ngIf="clubLogoUrl" [src]="clubLogoUrl" alt="Logotipo del Club" class="club-logo" />
+</div>
+<div *ngIf="formStep === 1">
+<h1 class="titulo-centrado">Selecciona la liga a la que quieres inscribir un equipo</h1>
+<div class="categoria-buttons">
+  <button
+    *ngFor="let categoria of categorias"
+    type="button"
+    class="btn-categoria"
+    [class.selected]="createTeamForm.get('categoria')?.value === categoria"
+    (click)="seleccionarCategoria(categoria)"
+  >
+    <img
+      [src]="getCategoriaIconPath(categoria)"
+      alt="{{ categoria }}"
+      class="categoria-icon"
+    />
+    {{ categoria }}
+  </button>
+</div>
+<button type="button" class="btn btn-primary" (click)="goToNextStep()">Siguiente</button>
+
+</div>
+
+
+
+<!-- Mostrar el mensaje si ya existe un equipo en la categoría seleccionada -->
+<div *ngIf="categoriaSeleccionada && equiposPorCategoria[categoriaSeleccionada]" class="alert alert-info">
+  Ya tienes un equipo en esta liga.
+</div>
+
+<!-- Mostrar el botón de edición y el menú de edición solo si ya existe un equipo -->
+<div *ngIf="categoriaSeleccionada && equiposPorCategoria[categoriaSeleccionada]" class="mt-3">
+  <button class="btn btn-warning" (click)="toggleEditMode()">
+    Editar equipo
+  </button>
+
+  <!-- Menú de edición -->
+  <div *ngIf="editMode" class="edit-form mt-3">
+    <form [formGroup]="createTeamForm" (ngSubmit)="editarEquipo()">
+      <div class="form-group">
+        <label for="nombre_dt">Nombre del DT</label>
+        <input
+          id="nombre_dt"
+          formControlName="nombre_dt"
+          class="form-control"
+          type="text"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="correo_dt">Correo del DT</label>
+        <input
+          id="correo_dt"
+          formControlName="correo_dt"
+          class="form-control"
+          type="email"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="contraseña_dt">Contraseña del DT</label>
+        <input
+          id="contraseña_dt"
+          formControlName="contraseña_dt"
+          class="form-control"
+          type="password"
+          required
+        />
+      </div>
+
+      
+      <div class="form-group">
+        <label>Colores del equipo</label>
+        <div class="d-flex justify-content-between">
+          <!-- Colores Local -->
+          <div class="color-container">
+            <h5>Local</h5>
+            <div class="color-grid">
+              <div class="color-item" *ngFor="let color of coloresDisponibles">
+                <img
+                  [src]="'assets/' + color + '.jpeg'"
+                  [class.selected]="colorLocal === color"
+                  (click)="seleccionarColor('local', color)"
+                  alt="{{ color }}"
+                  class="color-image"
+                  [title]="color"
+                />
+                <img *ngIf="clubLogoUrl" [src]="clubLogoUrl" alt="Logotipo del Club" class="club-logo-overlay" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Colores Visitante -->
+          <div class="color-container">
+            <h5>Visitante</h5>
+            <div class="color-grid">
+              <div class="color-item" *ngFor="let color of coloresDisponibles">
+                <img
+                  [src]="'assets/' + color + '.jpeg'"
+                  [class.selected]="colorVisitante === color"
+                  (click)="seleccionarColor('visitante', color)"
+                  alt="{{ color }}"
+                  class="color-image"
+                  [title]="color"
+                />
+                <img *ngIf="clubLogoUrl" [src]="clubLogoUrl" alt="Logotipo del Club" class="club-logo-overlay" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      
+
+      <button type="submit" class="btn btn-success" [disabled]="loading">
+        Guardar cambios
+      </button>
+      
+    </form>
+  </div>
+</div>
+
+<div *ngIf="categoriaSeleccionada && !equiposPorCategoria[categoriaSeleccionada]">
+  <form [formGroup]="createTeamForm" (ngSubmit)="onSubmit()">
+    <!-- Formulario -->
+
+
+   <!-- Formulario de Nombre del DT -->
+<div *ngIf="formStep === 2">
+  <div class="form-group">
+    <label for="nombre_dt">Nombre del DT</label>
+    <input
+      id="nombre_dt"
+      formControlName="nombre_dt"
+      class="form-control"
+      type="text"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="correo_dt">Correo del DT</label>
+    <input
+      id="correo_dt"
+      formControlName="correo_dt"
+      class="form-control"
+      type="email"
+      required
+    />
+  </div>
+  <button type="button" class="btn btn-primary" (click)="goToNextStep()">Siguiente</button>
+  <button type="button" class="btn btn-secondary" (click)="goToPreviousStep()" *ngIf="formStep > 1">
+    Atrás
+  </button>
+</div>
+
+  <!-- Formulario de Correo y Contraseña del DT -->
+
+
+
+    <div class="form-group">
+      <label></label>
+      <div class="categoria-buttons invisible-buttons">
+        <button
+          *ngFor="let categoria of categorias"
+          type="button"
+          class="btn-categoria"
+          [class.selected]="createTeamForm.get('categoria')?.value === categoria"
+          (click)="seleccionarCategoria(categoria)"
+        >
+          <img
+            [src]="getCategoriaIconPath(categoria)"
+            alt="{{ categoria }}"
+            class="categoria-icon"
+          />
+          {{ categoria }}
+        </button>
+      </div>
+    </div>
+
+   <!-- Formulario de Colores del equipo -->
+    
+<div *ngIf="formStep === 3">
+  <div class="form-group">
+    <label>Colores del equipo</label>
+    <div class="d-flex justify-content-between">
+      <!-- Colores Local -->
+<div class="color-container">
+            <h5>Local</h5>
+            <div class="color-grid">
+              <div class="color-item" *ngFor="let color of coloresDisponibles">
+                <img
+                  [src]="'assets/' + color + '.jpeg'"
+                  [class.selected]="colorLocal === color"
+                  (click)="seleccionarColor('local', color)"
+                  alt="{{ color }}"
+                  class="color-image"
+                  [title]="color"
+                />
+                <img *ngIf="clubLogoUrl" [src]="clubLogoUrl" alt="Logotipo del Club" class="club-logo-overlay" />
+              </div>
+            </div>
+          </div>
+
+      <!-- Colores Visitante -->
+      <div class="color-container">
+            <h5>Visitante</h5>
+            <div class="color-grid">
+              <div class="color-item" *ngFor="let color of coloresDisponibles">
+                <img
+                  [src]="'assets/' + color + '.jpeg'"
+                  [class.selected]="colorVisitante === color"
+                  (click)="seleccionarColor('visitante', color)"
+                  alt="{{ color }}"
+                  class="color-image"
+                  [title]="color"
+                />
+                <img *ngIf="clubLogoUrl" [src]="clubLogoUrl" alt="Logotipo del Club" class="club-logo-overlay" />
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+  
+  <button type="button" class="btn btn-primary" (click)="goToNextStep()">Siguiente</button>
+  <button type="button" class="btn btn-secondary" (click)="goToPreviousStep()" *ngIf="formStep > 2">
+    Atrás
+  </button>
+</div>
+
+
+<div *ngIf="formStep === 4">
+  <button type="submit" class="btn btn-success" [disabled]="loading">
+    Crear Equipo
+  </button>
+  <button type="button" class="btn btn-secondary" (click)="goToPreviousStep()" *ngIf="formStep > 3">
+    Atrás
+  </button>
+</div>
+
+    <div *ngIf="loading">Cargando...</div>
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  </form>
+</div>

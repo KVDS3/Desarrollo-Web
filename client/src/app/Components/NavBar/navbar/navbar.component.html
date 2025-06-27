@@ -1,0 +1,57 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/inicio">Liga Deportiva</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <!-- Menú a la izquierda -->
+    <ul class="navbar-nav me-auto">
+      <!-- No logueado -->
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="nav-link" routerLink="/Rclub">Registrar club</a>
+      </li>
+
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="nav-link" routerLink="/login">Iniciar Sesión</a>
+      </li>
+
+      <!-- Administrador del sistema -->
+      <ng-container *ngIf="rol === 'administrador_sistema'">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dueno">Administrar</a>
+        </li>
+      </ng-container>
+
+      <!-- Administrador de equipo -->
+      <ng-container *ngIf="rol === 'administrador_equipo'">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/equipo">Equipo</a>
+        </li>
+      </ng-container>
+
+      <!-- Director Técnico -->
+      <ng-container *ngIf="rol === 'dt'">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/equipo">Mi equipo</a>
+        </li>
+      </ng-container>
+    </ul>
+
+    <!-- Botón de usuario a la derecha -->
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item dropdown" *ngIf="isLoggedIn" [class.show]="dropdownAbierto">
+        <button class="nav-link dropdown-toggle btn btn-link" type="button"
+                (click)="dropdownAbierto = !dropdownAbierto"
+                aria-haspopup="true"
+                [attr.aria-expanded]="dropdownAbierto">
+          {{ usuario?.nombre }}
+        </button>
+        <div class="dropdown-menu dropdown-menu-end" [class.show]="dropdownAbierto">
+          <a class="dropdown-item" routerLink="/editar-usuario">Editar</a>
+          <button class="dropdown-item text-danger" (click)="logout()">Cerrar Sesión</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
