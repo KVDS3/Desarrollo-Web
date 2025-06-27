@@ -29,18 +29,66 @@ const routes: Routes = [
   { path: 'Dashboar', component: DashboardComponent},
   { path: 'mapa-sitio', component: MapaSitioComponent},
    
-  {
-    path: 'dashboard',
-    component: LayoutComponent, canActivate: [AuthGuard], data: { roles: ['administrador_sistema'] },
-    children: [
-      { path: 'Equipos', component: GestionEquiposComponent },
-      { path: 'Jugadores', component: GestionJugadoresComponent },
-      { path: 'Perfil', component: GestionPerfilComponent },
-      { path: 'Sistema', component: GestionSistemaComponent },
-      { path: 'Club', component: DuenoComponent },
-      { path: '', redirectTo: 'Perfil', pathMatch: 'full' }
-    ]
+ {
+  path: 'dashboard',
+  component: LayoutComponent, 
+  canActivate: [AuthGuard], 
+  data: { 
+    roles: ['administrador_sistema'],
+    breadcrumb: 'Perfil' // Cambiado de 'Dashboard' a 'Perfil'
   },
+  children: [
+    { 
+      path: 'Equipos', 
+      component: GestionEquiposComponent,
+      data: { 
+        breadcrumb: 'Equipos',
+        parentBreadcrumb: 'Perfil' // Nueva propiedad para relación jerárquica
+      }
+    },
+    { 
+      path: 'Jugadores', 
+      component: GestionJugadoresComponent,
+      data: { 
+        breadcrumb: 'Jugadores',
+        parentBreadcrumb: 'Perfil'
+      }
+    },
+    { 
+      path: 'Perfil', 
+      component: GestionPerfilComponent,
+      data: { 
+        breadcrumb: null, // Null para que no se duplique
+        hideParent: true // Oculta el breadcrumb padre en esta ruta
+      }
+    },
+    { 
+      path: 'Sistema', 
+      component: GestionSistemaComponent,
+      data: { 
+        breadcrumb: 'Sistema',
+        parentBreadcrumb: 'Perfil'
+      }
+    },
+    { 
+      path: 'Club', 
+      component: DuenoComponent,
+      data: { 
+        breadcrumb: 'Club',
+        parentBreadcrumb: 'Perfil'
+      }
+    },
+    { 
+      path: '', 
+      redirectTo: 'Perfil', 
+      pathMatch: 'full',
+      data: { 
+        breadcrumb: null, // Null para redirección
+        hideParent: true
+      }
+    }
+  ]
+},
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'dashboard' }
 ];

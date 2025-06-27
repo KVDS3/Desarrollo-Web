@@ -1,7 +1,111 @@
+.register-club-container {
+  max-width: 420px;
+  width: 100%;
+  background: linear-gradient(to bottom right, rgba(34, 34, 34, 0.95), rgba(51, 0, 0, 0.95));
+  padding: 35px 30px;
+  border-radius: 16px;
+  border: 1px solid rgba(128, 0, 0, 0.5);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+  color: #f5f5f5;
+  backdrop-filter: blur(8px);
+}
 
-  
+.form-text.text-muted {
+  color: #dddddd !important;
+  font-size: 0.85rem;
+}
 
-  .is-valid {
+.input-icon {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon i {
+  position: absolute;
+  top: 36px;
+  left: 10px;
+  color: #b30000;
+  font-size: 16px;
+}
+
+input[type="file"].form-control {
+  background-color: #333;
+  color: #ccc;
+  border: 1px solid #666;
+  padding: 8px;
+  height: 45px;
+  border-radius: 6px;
+  transition: border-color 0.3s, background-color 0.3s;
+  cursor: pointer;
+}
+
+input[type="file"].form-control::file-selector-button {
+  background-color: #800000;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+input[type="file"].form-control::file-selector-button:hover {
+  background-color: #a00000;
+}
+
+.form-control {
+  padding-left: 35px;
+  background-color: #444;
+  color: #fff;
+  border: 1px solid #666;
+  height: 45px;
+}
+
+.form-control:focus {
+  background-color: #555;
+  border-color: #800000;
+  box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.25);
+}
+
+.btn-register {
+  background-color: #800000;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.btn-register:hover {
+  background-color: #a00000;
+}
+
+.tooltip-icon {
+  position: absolute;
+  top: 5px;
+  right: -15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.tooltip-icon i {
+  font-size: 16px;
+  color: #ccc;
+  transition: color 0.2s ease;
+}
+
+.tooltip-icon i:hover {
+  color: #fff;
+}
+
+.is-valid {
   border-color: #28a745 !important;
   box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
 }
@@ -11,4 +115,12 @@
   box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
 }
 
+.text-danger {
+  color: #dc3545 !important;
+  font-size: 0.85rem;
+}
 
+.text-success {
+  color: #28a745 !important;
+  font-size: 0.85rem;
+}
